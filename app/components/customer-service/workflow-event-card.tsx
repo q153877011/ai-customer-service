@@ -34,7 +34,7 @@ const NODE_TYPE_LABEL: Partial<Record<BlockEnum, string>> = {
 export const WorkflowEventCard: React.FC<Props> = ({ event }) => {
   const [expanded, setExpanded] = useState(event.expanded ?? false)
 
-  // Fix 1: sync expanded state when event.expanded prop changes
+  // Sync controlled-expansion state when parent drives event.expanded
   useEffect(() => {
     if (event.expanded !== undefined) {
       setExpanded(event.expanded)
