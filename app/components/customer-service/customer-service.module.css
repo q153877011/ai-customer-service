@@ -757,7 +757,7 @@
   display: none;
 }
 .shell--narrow :global(.sidebar-drawer) :global(.sidebar) {
-  display: block;
+  display: flex;
 }
 
 /* ── 无障碍：减少动画 ────────────────────────────── */
