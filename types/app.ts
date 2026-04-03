@@ -277,6 +277,7 @@ export type UnifiedMessage =
   | {
       kind: 'agent_thought'
       id: string
+      /** 每个 agent_thought 事件单独产生一条消息，而不是追加到上一条。 */
       agentThought: AgentThought
       createdAt: number
     }
@@ -303,14 +304,15 @@ export type WorkflowEventMessage = {
   error?: string
   /** 总耗时（ms，succeeded / failed 后写入） */
   elapsedMs?: number
-  /** 是否展开节点详情 */
-  expanded: boolean
+  /** 是否展开节点详情（UI 临时状态，序列化时可忽略） */
+  expanded?: boolean
 }
 
 /**
- * 统一 session 标识。
- * - chat / agent → sessionId = Dify conversation_id
- * - workflow      → sessionId = Dify workflow run_id（本地临时 uuid，提交前为空）
+ * 统一 session 标识。消息列表由外部 messageMap: Map<string, UnifiedMessage[]> 持有，
+ * 不内嵌在此类型中，以避免大列表深拷贝。
+ * - chat / agent → id = Dify conversation_id
+ * - workflow      → id = Dify workflow run_id（本地临时 uuid，提交前为空）
  */
 export type UnifiedSession = {
   /** 对应 Dify conversation_id 或 workflow run_id */
