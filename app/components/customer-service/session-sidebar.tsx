@@ -20,7 +20,7 @@ const SessionItem: React.FC<{
   isActive: boolean
   onSelect: () => void
 }> = ({ session, isActive, onSelect }) => {
-  const date = new Date(session.createdAt).toLocaleDateString('zh-CN', {
+  const date = new Date(session.createdAt).toLocaleDateString(undefined, {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -55,11 +55,11 @@ export const SessionSidebar: React.FC<Props> = ({
       <div className="sidebar__header">
         <span className="sidebar__title">{appName ? `${appName} · 历史` : '历史记录'}</span>
         <div className="sidebar__header-actions">
-          <button type="button" className="sidebar__new-btn" onClick={onNew} title="新建会话">
+          <button type="button" className="sidebar__new-btn" onClick={onNew} title="新建会话" aria-label="新建会话">
             <PlusIcon className="sidebar__icon" aria-hidden="true" />
           </button>
           {drawerMode && (
-            <button type="button" className="sidebar__close-btn" onClick={onCloseDrawer} title="关闭">
+            <button type="button" className="sidebar__close-btn" onClick={onCloseDrawer} title="关闭" aria-label="关闭">
               <XMarkIcon className="sidebar__icon" aria-hidden="true" />
             </button>
           )}
