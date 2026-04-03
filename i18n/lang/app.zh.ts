@@ -48,6 +48,51 @@ const translation = {
     waitForResponse: '请等待上条信息响应完成',
     waitForImgUpload: '请等待图片上传完成',
   },
+  customerService: {
+    header: {
+      title: '智能客服',
+      history: '历史记录',
+      newSession: '新建会话',
+      closeHistory: '关闭',
+    },
+    message: {
+      empty: '有什么可以帮您？',
+      thinking: '正在思考…',
+      workflowRunning: '工作流运行中…',
+      workflowDone: '工作流已完成',
+      workflowFailed: '工作流运行失败',
+      agentThought: '查看思考过程',
+      agentTool: '工具：',
+    },
+    composer: {
+      placeholder: '请输入您的问题…',
+      send: '发送',
+      stop: '停止生成',
+      attach: '上传附件',
+      voice: '语音输入',
+      stopRecording: '停止录音',
+      readAloud: '朗读',
+    },
+    session: {
+      noHistory: '暂无历史记录',
+    },
+    workflow: {
+      statusWaiting: '等待中',
+      statusRunning: '运行中…',
+      statusSucceeded: '已完成',
+      statusFailed: '运行失败',
+      statusStopped: '已停止',
+      nodes: '个节点',
+      expandNodes: '展开节点详情',
+      collapseNodes: '收起节点详情',
+    },
+    errorMessage: {
+      uploadFailed: '文件上传失败',
+      ttsError: '朗读失败',
+      sttError: '录音转文字失败',
+      micDenied: '麦克风权限被拒绝',
+    },
+  },
 }
 
 export default translation

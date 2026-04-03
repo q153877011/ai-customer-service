@@ -51,6 +51,51 @@ const translation = {
     waitForResponse: 'Please wait for the response to the previous message to complete.',
     waitForImgUpload: 'Please wait for the image to upload',
   },
+  customerService: {
+    header: {
+      title: 'AI Assistant',
+      history: 'History',
+      newSession: 'New Session',
+      closeHistory: 'Close',
+    },
+    message: {
+      empty: 'How can I help you?',
+      thinking: 'Thinking…',
+      workflowRunning: 'Workflow running…',
+      workflowDone: 'Workflow completed',
+      workflowFailed: 'Workflow failed',
+      agentThought: 'View thinking process',
+      agentTool: 'Tool: ',
+    },
+    composer: {
+      placeholder: 'Type your message…',
+      send: 'Send',
+      stop: 'Stop',
+      attach: 'Attach files',
+      voice: 'Voice input',
+      stopRecording: 'Stop recording',
+      readAloud: 'Read aloud',
+    },
+    session: {
+      noHistory: 'No history yet',
+    },
+    workflow: {
+      statusWaiting: 'Waiting',
+      statusRunning: 'Running…',
+      statusSucceeded: 'Completed',
+      statusFailed: 'Failed',
+      statusStopped: 'Stopped',
+      nodes: 'nodes',
+      expandNodes: 'Show node details',
+      collapseNodes: 'Hide node details',
+    },
+    errorMessage: {
+      uploadFailed: 'File upload failed',
+      ttsError: 'Read-aloud failed',
+      sttError: 'Speech-to-text failed',
+      micDenied: 'Microphone permission denied',
+    },
+  },
 }
 
 export default translation
