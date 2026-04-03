@@ -10,9 +10,19 @@ import SessionSidebar from './session-sidebar'
 // CSS Modules
 import styles from './customer-service.module.css'
 
+type AppParams = {
+  text_to_speech?: { enabled?: boolean }
+  speech_to_text?: { enabled?: boolean }
+  file_upload?: { enabled?: boolean; number_limits?: number }
+  suggested_questions_after_answer?: { enabled?: boolean }
+  user_input_form?: unknown
+  default_language?: string
+  name?: string
+}
+
 type Props = {
   appType: AppTypeValue
-  appParams: any
+  appParams: AppParams | null
   appName?: string
   appIcon?: string
   /** true = 以嵌入小窗模式启动 */
@@ -85,10 +95,10 @@ const CustomerServiceShell: React.FC<Props> = ({
       ].filter(Boolean).join(' ')}
     >
       {/* ── 头部 ── */}
-      <header className={`${styles.shell__header} ${isEmbed || isNarrow ? styles['shell__header--compact'] : ''}`}>
+      <header className={[styles.shell__header, isEmbed || isNarrow ? styles['shell__header--compact'] : ''].filter(Boolean).join(' ')}>
         {/* 应用图标 */}
         {appIcon
-          ? <img src={appIcon} alt={appName} className={styles['shell__app-icon']} />
+          ? <img src={appIcon} alt={appName ?? ''} className={styles['shell__app-icon']} />
           : (
               <div className={styles['shell__app-icon-placeholder']} aria-hidden="true">
                 {appName?.[0] ?? 'A'}
@@ -104,7 +114,7 @@ const CustomerServiceShell: React.FC<Props> = ({
             type="button"
             className={styles['shell__header-btn']}
             onClick={() => setHistoryDrawerOpen(true)}
-            title="历史记录"
+            title="打开历史记录"
             aria-label="打开历史记录"
           >
             <ClockIcon className={styles['shell__header-icon']} aria-hidden="true" />
