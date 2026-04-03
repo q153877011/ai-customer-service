@@ -655,7 +655,7 @@
     background: none;
     cursor: pointer;
     color: #B0A89E;
-    transition: all 0.15s;
+    transition: background 0.15s, color 0.15s;
   }
 
   .sidebar__new-btn:hover,
@@ -753,8 +753,11 @@
 /* ── 响应式：窄容器 ───────────────────────────── */
 /* Issue 2: Fix narrow selector — use :global() for child classes */
 /* narrow 模式下，侧栏不常驻（由 drawer 控制） */
-.shell--narrow :global(.sidebar):not(:global(.sidebar-drawer) :global(.sidebar)) {
+.shell--narrow :global(.sidebar) {
   display: none;
+}
+.shell--narrow :global(.sidebar-drawer) :global(.sidebar) {
+  display: block;
 }
 
 /* ── 无障碍：减少动画 ────────────────────────────── */
