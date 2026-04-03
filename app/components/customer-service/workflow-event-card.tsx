@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ChevronDownIcon, ChevronRightIcon, CheckCircleIcon, XCircleIcon, ClockIcon } from '@heroicons/react/24/outline'
 import type { WorkflowEventMessage } from '@/types/app'
 import { WorkflowRunningStatus, BlockEnum } from '@/types/app'
@@ -27,10 +27,20 @@ const NODE_TYPE_LABEL: Partial<Record<BlockEnum, string>> = {
   [BlockEnum.Code]: '代码',
   [BlockEnum.HttpRequest]: 'HTTP 请求',
   [BlockEnum.Tool]: '工具',
+  [BlockEnum.TemplateTransform]: '模板转换',
+  [BlockEnum.VariableAssigner]: '变量赋值',
 }
 
 export const WorkflowEventCard: React.FC<Props> = ({ event }) => {
   const [expanded, setExpanded] = useState(event.expanded ?? false)
+
+  // Fix 1: sync expanded state when event.expanded prop changes
+  useEffect(() => {
+    if (event.expanded !== undefined) {
+      setExpanded(event.expanded)
+    }
+  }, [event.expanded])
+
   const isRunning = event.status === WorkflowRunningStatus.Running || event.status === WorkflowRunningStatus.Waiting
   const isSuccess = event.status === WorkflowRunningStatus.Succeeded
   const isFailed = event.status === WorkflowRunningStatus.Failed || event.status === WorkflowRunningStatus.Stopped
@@ -40,9 +50,9 @@ export const WorkflowEventCard: React.FC<Props> = ({ event }) => {
       {/* 顶部状态条 */}
       <div className={`wf-card__header wf-card__header--${event.status}`}>
         <span className="wf-card__status-icon">
-          {isSuccess && <CheckCircleIcon className="wf-icon wf-icon--success" />}
-          {isFailed && <XCircleIcon className="wf-icon wf-icon--error" />}
-          {isRunning && <ClockIcon className="wf-icon wf-icon--running wf-spin" />}
+          {isSuccess && <CheckCircleIcon aria-hidden="true" className="wf-icon wf-icon--success" />}
+          {isFailed && <XCircleIcon aria-hidden="true" className="wf-icon wf-icon--error" />}
+          {isRunning && <ClockIcon aria-hidden="true" className="wf-icon wf-icon--running wf-spin" />}
         </span>
         <span className="wf-card__status-label">{STATUS_LABEL[event.status]}</span>
         {event.elapsedMs !== undefined && (
@@ -50,13 +60,14 @@ export const WorkflowEventCard: React.FC<Props> = ({ event }) => {
         )}
         {event.nodes.length > 0 && (
           <button
+            type="button"
             className="wf-card__toggle"
             onClick={() => setExpanded(v => !v)}
             aria-label={expanded ? '收起节点详情' : '展开节点详情'}
           >
             {expanded
-              ? <ChevronDownIcon className="wf-icon" />
-              : <ChevronRightIcon className="wf-icon" />}
+              ? <ChevronDownIcon aria-hidden="true" className="wf-icon" />
+              : <ChevronRightIcon aria-hidden="true" className="wf-icon" />}
             <span>{event.nodes.length} 个节点</span>
           </button>
         )}
@@ -65,13 +76,13 @@ export const WorkflowEventCard: React.FC<Props> = ({ event }) => {
       {/* 节点时间线 */}
       {expanded && event.nodes.length > 0 && (
         <div className="wf-card__timeline">
-          {event.nodes.map((node, idx) => (
-            <div key={node.id ?? idx} className={`wf-node wf-node--${node.status}`}>
+          {event.nodes.map((node) => (
+            <div key={node.id} className={`wf-node wf-node--${node.status}`}>
               <div className="wf-node__dot" />
               <div className="wf-node__body">
                 <span className="wf-node__title">
                   {NODE_TYPE_LABEL[node.node_type] ?? node.node_type}
-                  {node.title && node.title !== node.node_type ? ` · ${node.title}` : ''}
+                  {node.title && NODE_TYPE_LABEL[node.node_type] !== node.title ? ` · ${node.title}` : ''}
                 </span>
                 <span className="wf-node__time">{node.elapsed_time.toFixed(2)}s</span>
                 {node.error && (
