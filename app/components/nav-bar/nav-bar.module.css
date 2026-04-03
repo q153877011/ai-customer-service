@@ -15,6 +15,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .link {
@@ -31,6 +34,11 @@
 .link:hover {
   background: #F6F3EE;
   color: #1A1A1A;
+}
+
+.link:focus-visible {
+  outline: 2px solid #C8754A;
+  outline-offset: 2px;
 }
 
 .linkActive {
