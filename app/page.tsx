@@ -1,11 +1,11 @@
-import React from 'react'
-
+import NavBar from '@/app/components/nav-bar'
 import Main from '@/app/components'
 
-const App = () => {
-  return (
+const App = () => (
+  <>
+    <NavBar />
     <Main />
-  )
-}
+  </>
+)
 
-export default React.memo(App)
+export default App
