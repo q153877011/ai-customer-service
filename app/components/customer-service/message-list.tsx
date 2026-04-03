@@ -42,17 +42,22 @@ const UserBubble: React.FC<{ msg: UserMsg }> = ({ msg }) => (
   </div>
 )
 
+const AppAvatar: React.FC<{ appName?: string; appIcon?: string }> = ({ appName, appIcon }) => (
+  <div className="msg-avatar">
+    {appIcon
+      // eslint-disable-next-line @next/next/no-img-element
+      ? <img src={appIcon} alt={appName} className="msg-avatar__img" onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+      : <span className="msg-avatar__initial">{appName?.[0] ?? 'A'}</span>}
+  </div>
+)
+
 const AgentThoughtBubble: React.FC<{
   msg: AgentThoughtMsg
   appName?: string
   appIcon?: string
 }> = ({ msg, appName, appIcon }) => (
   <div className="msg-row msg-row--assistant">
-    <div className="msg-avatar">
-      {appIcon
-        ? <img src={appIcon} alt={appName} className="msg-avatar__img" />
-        : <span className="msg-avatar__initial">{appName?.[0] ?? 'A'}</span>}
-    </div>
+    <AppAvatar appName={appName} appIcon={appIcon} />
     <div className="msg-bubble msg-bubble--assistant">
       <details className="msg-thought">
         <summary>查看思考过程</summary>
@@ -60,6 +65,7 @@ const AgentThoughtBubble: React.FC<{
         {msg.agentThought.tool && (
           <p className="msg-thought__tool">工具：{msg.agentThought.tool}</p>
         )}
+        {/* TODO: surface observation/tool_input fields when needed */}
       </details>
     </div>
   </div>
@@ -75,11 +81,7 @@ const AssistantBubble: React.FC<{
   onFeedback: (f: Feedbacktype) => void
 }> = ({ msg, appName, appIcon, ttsEnabled, ttsPlaying, onTts, onFeedback }) => (
   <div className="msg-row msg-row--assistant">
-    <div className="msg-avatar">
-      {appIcon
-        ? <img src={appIcon} alt={appName} className="msg-avatar__img" />
-        : <span className="msg-avatar__initial">{appName?.[0] ?? 'A'}</span>}
-    </div>
+    <AppAvatar appName={appName} appIcon={appIcon} />
     <div className="msg-bubble msg-bubble--assistant">
       <div className="msg-bubble__markdown">
         <ReactMarkdown>{msg.content}</ReactMarkdown>
