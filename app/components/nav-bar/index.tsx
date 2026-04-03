@@ -14,12 +14,13 @@ const NavBar = () => {
   const pathname = usePathname()
 
   return (
-    <nav className={styles.nav}>
+    <nav className={styles.nav} aria-label="Main navigation">
       <div className={styles.links}>
         {NAV_LINKS.map(({ label, href }) => (
           <Link
             key={href}
             href={href}
+            aria-current={pathname === href ? 'page' : undefined}
             className={`${styles.link}${pathname === href ? ` ${styles.linkActive}` : ''}`}
           >
             {label}
