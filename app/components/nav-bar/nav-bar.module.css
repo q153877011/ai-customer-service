@@ -41,12 +41,8 @@
   outline-offset: 2px;
 }
 
-.linkActive {
-  color: #C8754A;
-  background: #F1E2D8;
-}
-
+.linkActive,
 .linkActive:hover {
-  background: #F1E2D8;
   color: #C8754A;
+  background: #F1E2D8;
 }
