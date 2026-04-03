@@ -26,10 +26,11 @@ import type {
 } from '@/types/app'
 import { WorkflowRunningStatus, TransferMethod } from '@/types/app'
 import type { AppTypeValue } from '@/config'
+import type { AppParams } from './index'
 
 export type UseCustomerServiceOptions = {
   appType: AppTypeValue
-  appParams: any
+  appParams: AppParams | null
   isEmbed?: boolean
   /** 初始 conversationId（从 URL 或父组件传入） */
   initialConversationId?: string | null

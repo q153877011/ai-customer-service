@@ -11,26 +11,11 @@
 import React, { useEffect, useState } from 'react'
 import { fetchAppParams, fetchAppMeta } from '@/service'
 import type { AppTypeValue } from '@/config'
+import { setLocaleOnClient } from '@/i18n/client'
+import { i18n as i18nConfig } from '@/i18n'
+import { detectAppType, difyLocaleToAppLocale } from '@/utils/detect-app-type'
 import CustomerServiceShell from '@/app/components/customer-service'
 import Loading from '@/app/components/base/loading'
-
-function detectAppType(params: any, meta: any): AppTypeValue {
-  if (params && typeof params === 'object' && 'workflow' in params)
-    return 'workflow'
-
-  const isChatLike
-    = params?.speech_to_text !== undefined
-    || params?.suggested_questions_after_answer !== undefined
-    || params?.text_to_speech !== undefined
-
-  if (!isChatLike)
-    return 'completion'
-
-  const hasTools
-    = meta?.tool_icons && Object.keys(meta.tool_icons).length > 0
-
-  return hasTools ? 'agent' : 'chat'
-}
 
 const EmbedPage: React.FC = () => {
   const [appType, setAppType] = useState<AppTypeValue | null>(null)
@@ -47,6 +32,13 @@ const EmbedPage: React.FC = () => {
       setAppType(detectAppType(params, meta))
       setAppParams(params)
       setAppMeta(meta)
+
+      const difyLang = (params as any)?.default_language
+      if (difyLang) {
+        const locale = difyLocaleToAppLocale(difyLang)
+        if (locale && locale !== i18nConfig.defaultLocale)
+          setLocaleOnClient(locale, true)
+      }
     })
     return () => { cancelled = true }
   }, [])
@@ -73,3 +65,4 @@ const EmbedPage: React.FC = () => {
 }
 
 export default EmbedPage
+

@@ -31,7 +31,8 @@ export function useContainerBreakpoints(containerRef: React.RefObject<HTMLElemen
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const width = entry.contentRect.width
-        setSize(computeSize(width))
+        const newSize = computeSize(width)
+        setSize(prev => prev !== newSize ? newSize : prev)
       }
     })
     observer.observe(el)

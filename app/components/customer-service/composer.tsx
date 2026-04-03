@@ -79,7 +79,7 @@ export const Composer: React.FC<Props> = ({
   }
 
   return (
-    <div className={`composer${isNarrow ? ' composer--narrow' : ''}`}>
+    <div className={['composer', isNarrow && 'composer--narrow'].filter(Boolean).join(' ')}>
       {/* 建议问题 */}
       {suggestedQuestions.length > 0 && !isResponding && (
         <div className="composer__suggestions">
@@ -102,7 +102,7 @@ export const Composer: React.FC<Props> = ({
           {attachedFiles.map(f => (
             <div
               key={f._id}
-              className={`composer__attachment${f.progress === -1 ? ' composer__attachment--error' : ''}`}
+              className={['composer__attachment', f.progress === -1 && 'composer__attachment--error'].filter(Boolean).join(' ')}
             >
               {f.previewUrl
                 ? (
@@ -173,7 +173,7 @@ export const Composer: React.FC<Props> = ({
           {sttEnabled && (
             <button
               type="button"
-              className={`composer__btn${isRecording ? ' composer__btn--recording' : ''}`}
+              className={['composer__btn', isRecording && 'composer__btn--recording'].filter(Boolean).join(' ')}
               onClick={onToggleRecording}
               title={isRecording ? '停止录音' : '语音输入'}
               disabled={isResponding && !isRecording}
@@ -197,7 +197,7 @@ export const Composer: React.FC<Props> = ({
             : (
               <button
                 type="button"
-                className={`composer__btn composer__btn--send${canSend ? ' composer__btn--send-active' : ''}`}
+                className={['composer__btn', 'composer__btn--send', canSend && 'composer__btn--send-active'].filter(Boolean).join(' ')}
                 onClick={onSend}
                 disabled={!canSend}
                 title="发送（Enter）"

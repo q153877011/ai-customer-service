@@ -10,7 +10,7 @@ import SessionSidebar from './session-sidebar'
 // CSS Modules
 import styles from './customer-service.module.css'
 
-type AppParams = {
+export type AppParams = {
   text_to_speech?: { enabled?: boolean }
   speech_to_text?: { enabled?: boolean }
   file_upload?: { enabled?: boolean; number_limits?: number }
