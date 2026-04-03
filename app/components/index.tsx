@@ -73,7 +73,7 @@ const AppEntry: React.FC = () => {
     )
   }
 
-  const appName: string = appMeta?.name ?? appParams?.name ?? undefined
+  const appName: string | undefined = appMeta?.name ?? appParams?.name ?? undefined
   const appIcon: string | undefined = appMeta?.icon ?? undefined
 
   return (
