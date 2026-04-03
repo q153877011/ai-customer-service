@@ -42,12 +42,24 @@ const UserBubble: React.FC<{ msg: UserMsg }> = ({ msg }) => (
   </div>
 )
 
+const handleAvatarError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  e.currentTarget.style.display = 'none'
+}
+
 const AppAvatar: React.FC<{ appName?: string; appIcon?: string }> = ({ appName, appIcon }) => (
   <div className="msg-avatar">
-    {appIcon
+    <span className="msg-avatar__initial" aria-hidden={!!appIcon}>
+      {appName?.[0] ?? 'A'}
+    </span>
+    {appIcon && (
       // eslint-disable-next-line @next/next/no-img-element
-      ? <img src={appIcon} alt={appName} className="msg-avatar__img" onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
-      : <span className="msg-avatar__initial">{appName?.[0] ?? 'A'}</span>}
+      <img
+        src={appIcon}
+        alt={appName}
+        className="msg-avatar__img"
+        onError={handleAvatarError}
+      />
+    )}
   </div>
 )
 
