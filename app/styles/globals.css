@@ -1,3 +1,6 @@
+/* Customer service child-component global styles */
+@import '../components/customer-service/customer-service-global.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

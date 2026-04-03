@@ -24,6 +24,9 @@ export type AppTypeValue = 'completion' | 'workflow' | 'chat' | 'agent'
 /** Legacy boolean — kept for cool-text-generation which hasn't been migrated yet */
 export const IS_WORKFLOW = false
 
+/** Legacy boolean — this app is always chat-based after the unification refactor */
+export const IS_CHAT_APP = true
+
 /** Fallback app info — actual info is fetched at runtime via /v1/meta */
 export const APP_INFO: AppInfo = {
   title: 'Text Generator APP',
