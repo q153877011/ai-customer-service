@@ -1,4 +1,5 @@
 import type { Locale } from '@/i18n'
+import type { AppTypeValue } from '@/config'
 
 export type AppInfo = {
   title: string
@@ -254,35 +255,40 @@ export type AttachedFile = {
 // Unified Customer Service Session types
 // ────────────────────────────────────────────────
 
-/** 统一消息类型标识 */
-export type UnifiedMessageKind =
-  | 'user'           // 用户输入
-  | 'assistant'      // AI 文本回复（chat / agent / workflow answer）
-  | 'agent_thought'  // agent 工具调用思考
-  | 'workflow_event' // workflow 运行进度卡
-
 /** 一条统一消息（消息流的基本单元） */
-export type UnifiedMessage = {
-  /** 客户端生成的稳定 id（uuid v4），workflow 消息复用 run_id */
-  id: string
-  kind: UnifiedMessageKind
-  /** 文本内容（user / assistant 使用） */
-  content: string
-  /** True 表示该 assistant 消息仍在流式传输中 */
-  isStreaming?: boolean
-  /** 该消息对应的 Dify message_id（chat 模式下由 message_end 事件写入） */
-  difyMessageId?: string
-  /** agent_thought 详情 */
-  agentThought?: AgentThought
-  /** workflow 事件详情 */
-  workflowEvent?: WorkflowEventMessage
-  /** 用户消息附件 */
-  attachments?: MessageAttachment[]
-  /** 消息反馈 */
-  feedback?: Feedbacktype
-  /** 消息时间戳（ms） */
-  createdAt: number
-}
+export type UnifiedMessage =
+  | {
+      kind: 'user'
+      id: string
+      content: string
+      attachments?: MessageAttachment[]
+      createdAt: number
+    }
+  | {
+      kind: 'assistant'
+      id: string
+      content: string
+      isStreaming?: boolean
+      /** 该消息对应的 Dify message_id（chat 模式下由 message_end 事件写入） */
+      difyMessageId?: string
+      feedback?: Feedbacktype
+      createdAt: number
+    }
+  | {
+      kind: 'agent_thought'
+      id: string
+      agentThought: AgentThought
+      createdAt: number
+    }
+  | {
+      kind: 'workflow_event'
+      id: string
+      workflowEvent: WorkflowEventMessage
+      createdAt: number
+    }
+
+/** 统一消息类型标识 */
+export type UnifiedMessageKind = UnifiedMessage['kind']
 
 /** workflow 事件卡的数据模型 */
 export type WorkflowEventMessage = {
@@ -312,7 +318,7 @@ export type UnifiedSession = {
   /** 展示名，chat 用 Dify 对话名，workflow 用时间戳生成 */
   name: string
   /** 会话来源类型 */
-  appType: 'chat' | 'agent' | 'workflow'
+  appType: Exclude<AppTypeValue, 'completion'>
   createdAt: number
 }
 
