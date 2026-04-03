@@ -249,3 +249,77 @@ export type AttachedFile = {
    */
   previewUrl?: string
 }
+
+// ────────────────────────────────────────────────
+// Unified Customer Service Session types
+// ────────────────────────────────────────────────
+
+/** 统一消息类型标识 */
+export type UnifiedMessageKind =
+  | 'user'           // 用户输入
+  | 'assistant'      // AI 文本回复（chat / agent / workflow answer）
+  | 'agent_thought'  // agent 工具调用思考
+  | 'workflow_event' // workflow 运行进度卡
+
+/** 一条统一消息（消息流的基本单元） */
+export type UnifiedMessage = {
+  /** 客户端生成的稳定 id（uuid v4），workflow 消息复用 run_id */
+  id: string
+  kind: UnifiedMessageKind
+  /** 文本内容（user / assistant 使用） */
+  content: string
+  /** True 表示该 assistant 消息仍在流式传输中 */
+  isStreaming?: boolean
+  /** 该消息对应的 Dify message_id（chat 模式下由 message_end 事件写入） */
+  difyMessageId?: string
+  /** agent_thought 详情 */
+  agentThought?: AgentThought
+  /** workflow 事件详情 */
+  workflowEvent?: WorkflowEventMessage
+  /** 用户消息附件 */
+  attachments?: MessageAttachment[]
+  /** 消息反馈 */
+  feedback?: Feedbacktype
+  /** 消息时间戳（ms） */
+  createdAt: number
+}
+
+/** workflow 事件卡的数据模型 */
+export type WorkflowEventMessage = {
+  /** Dify workflow run id */
+  runId: string
+  status: WorkflowRunningStatus
+  /** 已完成的节点追踪列表（运行中持续追加） */
+  nodes: NodeTracing[]
+  /** workflow 最终输出文本（succeeded 后写入） */
+  outputText?: string
+  /** 错误信息（failed 后写入） */
+  error?: string
+  /** 总耗时（ms，succeeded / failed 后写入） */
+  elapsedMs?: number
+  /** 是否展开节点详情 */
+  expanded: boolean
+}
+
+/**
+ * 统一 session 标识。
+ * - chat / agent → sessionId = Dify conversation_id
+ * - workflow      → sessionId = Dify workflow run_id（本地临时 uuid，提交前为空）
+ */
+export type UnifiedSession = {
+  /** 对应 Dify conversation_id 或 workflow run_id */
+  id: string
+  /** 展示名，chat 用 Dify 对话名，workflow 用时间戳生成 */
+  name: string
+  /** 会话来源类型 */
+  appType: 'chat' | 'agent' | 'workflow'
+  createdAt: number
+}
+
+/** embed 小窗 UI 状态 */
+export type EmbedUIState = {
+  /** true = 以嵌入/小窗模式渲染（紧凑头部、抽屉历史、压缩按钮） */
+  isEmbed: boolean
+  /** 历史抽屉是否打开（embed 模式下） */
+  historyDrawerOpen: boolean
+}
