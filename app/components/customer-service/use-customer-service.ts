@@ -348,12 +348,14 @@ export function useCustomerService({
             }
             setMessages(prev => [...prev, thoughtMsg])
           },
-          onCompleted: () => {
+          onCompleted: (hasError?: boolean) => {
             setIsResponding(false)
-            if (!skipNextResetRef.current)
-              loadSessions()
-            else
-              skipNextResetRef.current = false
+            if (!hasError) {
+              if (!skipNextResetRef.current)
+                loadSessions()
+              else
+                skipNextResetRef.current = false
+            }
           },
           onError: () => {
             setMessages(prev =>
@@ -469,6 +471,14 @@ export function useCustomerService({
 
             setIsResponding(false)
             loadSessions()
+          },
+          onError: () => {
+            updateWfEvent(ev => ({
+              ...ev,
+              isStreaming: false,
+              status: WorkflowRunningStatus.Failed,
+            }))
+            setIsResponding(false)
           },
         },
       )

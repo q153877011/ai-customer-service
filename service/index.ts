@@ -34,6 +34,7 @@ export const sendWorkflowMessage = async (
     onNodeStarted,
     onNodeFinished,
     onWorkflowFinished,
+    onError,
     onTaskId,
     abortController,
   }: {
@@ -41,6 +42,7 @@ export const sendWorkflowMessage = async (
     onNodeStarted: IOnNodeStarted
     onNodeFinished: IOnNodeFinished
     onWorkflowFinished: IOnWorkflowFinished
+    onError?: IOnError
     onTaskId?: IOnTaskId
     abortController?: AbortController
   },
@@ -50,7 +52,7 @@ export const sendWorkflowMessage = async (
       ...body,
       response_mode: 'streaming',
     },
-  }, { onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished, onTaskId, abortController })
+  }, { onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished, onError, onTaskId, abortController })
 }
 
 export const stopCompletionMessage = async (taskId: string) => {
