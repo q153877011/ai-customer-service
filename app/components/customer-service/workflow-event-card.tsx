@@ -9,26 +9,26 @@ type Props = {
 }
 
 const STATUS_LABEL: Record<WorkflowRunningStatus, string> = {
-  [WorkflowRunningStatus.Waiting]: '等待中',
-  [WorkflowRunningStatus.Running]: '运行中…',
-  [WorkflowRunningStatus.Succeeded]: '已完成',
-  [WorkflowRunningStatus.Failed]: '运行失败',
-  [WorkflowRunningStatus.Stopped]: '已停止',
+  [WorkflowRunningStatus.Waiting]: 'Waiting',
+  [WorkflowRunningStatus.Running]: 'Running…',
+  [WorkflowRunningStatus.Succeeded]: 'Completed',
+  [WorkflowRunningStatus.Failed]: 'Failed',
+  [WorkflowRunningStatus.Stopped]: 'Stopped',
 }
 
 const NODE_TYPE_LABEL: Partial<Record<BlockEnum, string>> = {
-  [BlockEnum.Start]: '开始',
-  [BlockEnum.End]: '结束',
-  [BlockEnum.Answer]: '输出',
+  [BlockEnum.Start]: 'Start',
+  [BlockEnum.End]: 'End',
+  [BlockEnum.Answer]: 'Output',
   [BlockEnum.LLM]: 'LLM',
-  [BlockEnum.KnowledgeRetrieval]: '知识检索',
-  [BlockEnum.QuestionClassifier]: '问题分类',
-  [BlockEnum.IfElse]: '条件分支',
-  [BlockEnum.Code]: '代码',
-  [BlockEnum.HttpRequest]: 'HTTP 请求',
-  [BlockEnum.Tool]: '工具',
-  [BlockEnum.TemplateTransform]: '模板转换',
-  [BlockEnum.VariableAssigner]: '变量赋值',
+  [BlockEnum.KnowledgeRetrieval]: 'Knowledge Retrieval',
+  [BlockEnum.QuestionClassifier]: 'Question Classifier',
+  [BlockEnum.IfElse]: 'Condition Branch',
+  [BlockEnum.Code]: 'Code',
+  [BlockEnum.HttpRequest]: 'HTTP Request',
+  [BlockEnum.Tool]: 'Tool',
+  [BlockEnum.TemplateTransform]: 'Template Transform',
+  [BlockEnum.VariableAssigner]: 'Variable Assigner',
 }
 
 export const WorkflowEventCard: React.FC<Props> = ({ event }) => {

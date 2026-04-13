@@ -15,18 +15,18 @@ type Props = {
   onSend: () => void
   onStop: () => void
   isResponding: boolean
-  // 附件
+  // Attachments
   attachedFiles: AttachedFile[]
   onAddFiles: (files: File[]) => void
   onRemoveFile: (id: string) => void
   fileUploadEnabled: boolean
-  // 语音
+  // Voice
   sttEnabled: boolean
   isRecording: boolean
   onToggleRecording: () => void
-  // 建议问题
+  // Suggested questions
   suggestedQuestions: string[]
-  // 布局
+  // Layout
   isNarrow?: boolean
   placeholder?: string
 }
@@ -46,7 +46,7 @@ export const Composer: React.FC<Props> = ({
   onToggleRecording,
   suggestedQuestions,
   isNarrow = false,
-  placeholder = '请输入您的问题…',
+  placeholder = 'Type your message…',
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -80,13 +80,13 @@ export const Composer: React.FC<Props> = ({
 
   return (
     <div className={['composer', isNarrow && 'composer--narrow'].filter(Boolean).join(' ')}>
-      {/* 建议问题 */}
+      {/* Suggested questions */}
       {suggestedQuestions.length > 0 && !isResponding && (
         <div className="composer__suggestions">
-          {suggestedQuestions.map((q, i) => (
+          {suggestedQuestions.map(q => (
             <button
               type="button"
-              key={i}
+              key={q}
               className="composer__suggestion-chip"
               onClick={() => onChange(q)}
             >
@@ -96,7 +96,7 @@ export const Composer: React.FC<Props> = ({
         </div>
       )}
 
-      {/* 附件预览条 */}
+      {/* Attachment preview strip */}
       {attachedFiles.length > 0 && (
         <div className="composer__attachments">
           {attachedFiles.map(f => (
@@ -122,7 +122,7 @@ export const Composer: React.FC<Props> = ({
                 type="button"
                 className="composer__attachment-remove"
                 onClick={() => onRemoveFile(f._id)}
-                aria-label={`移除 ${f.name}`}
+                aria-label={`Remove ${f.name}`}
               >
                 <XMarkIcon className="composer__icon composer__icon--sm" aria-hidden="true" />
               </button>
@@ -131,7 +131,7 @@ export const Composer: React.FC<Props> = ({
         </div>
       )}
 
-      {/* 主输入行 */}
+      {/* Main input row */}
       <div className="composer__row">
         <textarea
           ref={textareaRef}
@@ -142,11 +142,11 @@ export const Composer: React.FC<Props> = ({
           placeholder={placeholder}
           rows={1}
           disabled={isResponding}
-          aria-label="消息输入框"
+          aria-label="Message input"
         />
 
         <div className="composer__actions">
-          {/* 附件按钮 */}
+          {/* Attach file button */}
           {fileUploadEnabled && (
             <>
               <input
@@ -161,7 +161,7 @@ export const Composer: React.FC<Props> = ({
                 type="button"
                 className="composer__btn"
                 onClick={() => fileInputRef.current?.click()}
-                title="上传附件"
+                title="Attach files"
                 disabled={isResponding}
               >
                 <PaperClipIcon className="composer__icon" aria-hidden="true" />
@@ -169,27 +169,27 @@ export const Composer: React.FC<Props> = ({
             </>
           )}
 
-          {/* 语音按钮 */}
+          {/* Voice input button */}
           {sttEnabled && (
             <button
               type="button"
               className={['composer__btn', isRecording && 'composer__btn--recording'].filter(Boolean).join(' ')}
               onClick={onToggleRecording}
-              title={isRecording ? '停止录音' : '语音输入'}
+              title={isRecording ? 'Stop recording' : 'Voice input'}
               disabled={isResponding && !isRecording}
             >
               <MicrophoneIcon className="composer__icon" aria-hidden="true" />
             </button>
           )}
 
-          {/* 停止 / 发送 */}
+          {/* Stop / Send */}
           {isResponding
             ? (
               <button
                 type="button"
                 className="composer__btn composer__btn--stop"
                 onClick={onStop}
-                title="停止生成"
+                title="Stop generating"
               >
                 <StopIcon className="composer__icon" aria-hidden="true" />
               </button>
@@ -200,7 +200,7 @@ export const Composer: React.FC<Props> = ({
                 className={['composer__btn', 'composer__btn--send', canSend && 'composer__btn--send-active'].filter(Boolean).join(' ')}
                 onClick={onSend}
                 disabled={!canSend}
-                title="发送（Enter）"
+                title="Send (Enter)"
               >
                 <PaperAirplaneIcon className="composer__icon" aria-hidden="true" />
               </button>

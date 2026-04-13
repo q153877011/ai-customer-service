@@ -31,6 +31,9 @@ export async function POST(request: NextRequest) {
     return new Response(res.data.id as any)
   }
   catch (e: any) {
-    return new Response(e.message)
+    return new Response(
+      JSON.stringify({ message: e?.message ?? 'Upload failed' }),
+      { status: e?.response?.status ?? 500, headers: { 'Content-Type': 'application/json' } },
+    )
   }
 }

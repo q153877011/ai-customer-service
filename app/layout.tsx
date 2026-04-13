@@ -1,4 +1,5 @@
 import { getLocaleOnServer } from '@/i18n/server'
+import I18nProvider from '@/app/components/i18n-provider'
 
 import './styles/globals.css'
 import './styles/markdown.scss'
@@ -12,7 +13,9 @@ const LocaleLayout = async ({
   return (
     <html lang={locale ?? 'en'} className="h-full">
       <body className="h-full">
-        {children}
+        <I18nProvider>
+          {children}
+        </I18nProvider>
       </body>
     </html>
   )

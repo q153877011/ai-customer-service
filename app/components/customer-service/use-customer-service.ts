@@ -32,25 +32,25 @@ export type UseCustomerServiceOptions = {
   appType: AppTypeValue
   appParams: AppParams | null
   isEmbed?: boolean
-  /** 初始 conversationId（从 URL 或父组件传入） */
+  /** initial conversationId (passed from URL or parent component) */
   initialConversationId?: string | null
 }
 
 export type UseCustomerServiceReturn = {
-  // ── 消息流 ──
+  // ── Message stream ──
   messages: UnifiedMessage[]
   isResponding: boolean
-  // ── 输入 ──
+  // ── Input ──
   inputText: string
   setInputText: (v: string) => void
   attachedFiles: AttachedFile[]
   addFiles: (files: File[]) => void
   removeFile: (id: string) => void
   suggestedQuestions: string[]
-  // ── 发送 / 停止 ──
+  // ── Send / Stop ──
   handleSend: () => Promise<void>
   handleStop: () => void
-  // ── 会话历史 ──
+  // ── Session history ──
   sessions: UnifiedSession[]
   activeSessionId: string | null
   switchSession: (id: string) => void
@@ -58,7 +58,7 @@ export type UseCustomerServiceReturn = {
   // ── embed UI ──
   embedState: EmbedUIState
   setHistoryDrawerOpen: (open: boolean) => void
-  // ── 反馈 ──
+  // ── Feedback ──
   handleFeedback: (messageId: string, feedback: Feedbacktype) => Promise<void>
   // ── TTS ──
   ttsPlayingMessageId: string | null
@@ -68,7 +68,7 @@ export type UseCustomerServiceReturn = {
   handleToggleRecording: () => Promise<void>
 }
 
-/** 将 AttachedFile[] 转为 Dify 接受的 VisionFile[] */
+/** Convert AttachedFile[] to the VisionFile[] format expected by Dify */
 function toVisionFiles(files: AttachedFile[]): VisionFile[] {
   return files
     .filter(f => f.uploadFileId && f.progress === 100)
@@ -88,20 +88,20 @@ export function useCustomerService({
   isEmbed = false,
   initialConversationId = null,
 }: UseCustomerServiceOptions): UseCustomerServiceReturn {
-  // ── 消息流 ──
+  // ── Message stream ──
   const [messages, setMessages] = useState<UnifiedMessage[]>([])
   const [isResponding, setIsResponding] = useState(false)
 
-  // ── 输入 ──
+  // ── Input ──
   const [inputText, setInputText] = useState('')
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([])
   const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([])
 
-  // ── 会话 ──
+  // ── Sessions ──
   const [sessions, setSessions] = useState<UnifiedSession[]>([])
   const [activeSessionId, setActiveSessionId] = useState<string | null>(initialConversationId)
 
-  // ── embed ──
+  // ── Embed ──
   const [embedState, setEmbedState] = useState<EmbedUIState>({
     isEmbed,
     historyDrawerOpen: false,
@@ -116,28 +116,28 @@ export function useCustomerService({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
 
-  // ── abort ──
+  // ── Abort ──
   const abortControllerRef = useRef<AbortController | null>(null)
   const currentTaskIdRef = useRef<string | null>(null)
 
-  // ── skip sidebar refresh when conversation created mid-stream ──
+  // ── Skip sidebar refresh when conversation is created mid-stream ──
   const skipNextResetRef = useRef(false)
 
-  // ── 加载会话历史列表 ──
+  // ── Load session history list ──
   const loadSessions = useCallback(async () => {
     try {
       if (appType === 'chat' || appType === 'agent') {
         const res: any = await fetchConversations({ limit: 50 })
         const data: UnifiedSession[] = (res?.data ?? []).map((c: any) => ({
           id: c.id,
-          name: c.name || '新会话',
+          name: c.name || 'New session',
           appType,
           createdAt: (c.created_at ?? 0) * 1000,
         }))
         setSessions(data)
       }
       else {
-        // workflow: 加载最近运行记录
+        // workflow: load recent run logs
         const res: any = await fetchWorkflowLogs({ limit: 50 })
         const data: UnifiedSession[] = (res?.data ?? []).map((log: any) => ({
           id: log.id,
@@ -149,11 +149,11 @@ export function useCustomerService({
       }
     }
     catch {
-      // 静默失败，历史不展示
+      // Silently fail — history will simply not be shown
     }
   }, [appType])
 
-  // ── 切换会话 / 加载历史消息 ──
+  // ── Switch session / load history messages ──
   const switchSession = useCallback(async (id: string) => {
     if (id === activeSessionId) return
     setActiveSessionId(id)
@@ -188,13 +188,13 @@ export function useCustomerService({
         setMessages(loaded)
       }
       catch {
-        // 静默
+        // Silently fail
       }
     }
-    // workflow session 不加载历史消息（每次运行独立）
+    // Workflow sessions don't load historical messages (each run is independent)
   }, [activeSessionId, appType])
 
-  // ── 新建 session ──
+  // ── New session ──
   const startNewSession = useCallback(() => {
     setActiveSessionId(null)
     setMessages([])
@@ -203,7 +203,7 @@ export function useCustomerService({
     skipNextResetRef.current = false
   }, [])
 
-  // ── 文件管理 ──
+  // ── File management ──
   const addFiles = useCallback((files: File[]) => {
     const visionEnabled = appParams?.file_upload?.enabled ?? false
     if (!visionEnabled) return
@@ -223,7 +223,7 @@ export function useCustomerService({
         previewUrl: f.type.startsWith('image/') ? URL.createObjectURL(f) : undefined,
       }))
 
-      // 触发上传
+      // Trigger upload
       newEntries.forEach((entry) => {
         uploadFile(
           entry.file,
@@ -257,12 +257,12 @@ export function useCustomerService({
     })
   }, [])
 
-  // ── 发送 ──
+  // ── Send ──
   const handleSend = useCallback(async () => {
     const query = inputText.trim()
     if (!query || isResponding) return
 
-    // 等待附件上传完成
+    // Wait for all attachments to finish uploading
     const hasUploading = attachedFiles.some(f => f.progress >= 0 && f.progress < 100)
     if (hasUploading) return
 
@@ -290,7 +290,7 @@ export function useCustomerService({
     abortControllerRef.current = abortController
 
     if (appType === 'chat' || appType === 'agent') {
-      // ── Chat / Agent 流 ──
+      // ── Chat / Agent stream ──
       const assistantMsgId = uuidv4()
       const assistantMsg: UnifiedMessage = {
         id: assistantMsgId,
@@ -332,7 +332,7 @@ export function useCustomerService({
                   : m,
               ),
             )
-            // 加载建议问题
+            // Load suggested questions
             if (difyMessageId && appParams?.suggested_questions_after_answer?.enabled) {
               fetchSuggestedQuestions(difyMessageId)
                 .then((res: any) => setSuggestedQuestions(res?.data ?? []))
@@ -362,7 +362,7 @@ export function useCustomerService({
             setMessages(prev =>
               prev.map(m =>
                 m.id === assistantMsgId && m.kind === 'assistant'
-                  ? { ...m, isStreaming: false, content: m.content || '[请求失败，请重试]' }
+                  ? { ...m, isStreaming: false, content: m.content || '[Request failed, please retry]' }
                   : m,
               ),
             )
@@ -372,7 +372,7 @@ export function useCustomerService({
       )
     }
     else {
-      // ── Workflow 流 ──
+      // ── Workflow stream ──
       const wfMsgId = uuidv4()
       const wfMsg: UnifiedMessage = {
         id: wfMsgId,
@@ -412,7 +412,7 @@ export function useCustomerService({
             }))
           },
           onNodeStarted: (_data) => {
-            // 节点开始时不追加，等 finished 再追加
+            // Node start: do not append yet, wait for finished event
           },
           onNodeFinished: (data) => {
             const nd = data.data
@@ -459,7 +459,7 @@ export function useCustomerService({
               elapsedMs: data.data?.elapsed_time ? Math.round(data.data.elapsed_time * 1000) : undefined,
             }))
 
-            // 把 workflow 输出追加为 assistant 消息方便阅读
+            // Append workflow output as an assistant message for easy reading
             if (outputText) {
               const answerMsg: UnifiedMessage = {
                 id: uuidv4(),
@@ -486,7 +486,7 @@ export function useCustomerService({
     }
   }, [inputText, isResponding, attachedFiles, appType, appParams, activeSessionId, loadSessions])
 
-  // ── 停止 ──
+  // ── Stop ──
   const handleStop = useCallback(() => {
     abortControllerRef.current?.abort()
     if (currentTaskIdRef.current) {
@@ -502,7 +502,7 @@ export function useCustomerService({
     )
   }, [appType])
 
-  // ── 反馈 ──
+  // ── Feedback ──
   const handleFeedback = useCallback(async (messageId: string, feedback: Feedbacktype) => {
     await updateFeedback({ url: `messages/${messageId}/feedbacks`, body: feedback })
     setMessages(prev =>
@@ -555,7 +555,7 @@ export function useCustomerService({
           if (text) setInputText(prev => prev + (prev ? ' ' : '') + text)
         }
         catch {
-          // 静默
+          // Silently fail
         }
       }
       mediaRecorderRef.current = mediaRecorder
@@ -563,21 +563,21 @@ export function useCustomerService({
       setIsRecording(true)
     }
     catch {
-      // 用户拒绝麦克风
+      // User denied microphone access
     }
   }, [isRecording])
 
-  // ── embed 历史抽屉 ──
+  // ── Embed history drawer ──
   const setHistoryDrawerOpen = useCallback((open: boolean) => {
     setEmbedState(prev => ({ ...prev, historyDrawerOpen: open }))
   }, [])
 
-  // ── 初始化 ──
+  // ── Initialization ──
   useEffect(() => {
     loadSessions()
   }, [loadSessions])
 
-  // ── 卸载清理 ──
+  // ── Cleanup on unmount ──
   useEffect(() => {
     return () => {
       abortControllerRef.current?.abort()

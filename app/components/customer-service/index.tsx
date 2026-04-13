@@ -25,18 +25,18 @@ type Props = {
   appParams: AppParams | null
   appName?: string
   appIcon?: string
-  /** true = 以嵌入小窗模式启动 */
+  /** true = launch in embedded widget mode */
   isEmbed?: boolean
-  /** 初始 conversationId */
+  /** initial conversationId */
   initialConversationId?: string | null
 }
 
 /**
- * 统一客服壳
+ * Unified customer service shell
  *
- * 无论 appType 是 chat / agent / workflow，都走这套 UI：
- * - 完整页：左侧历史栏 + 右侧消息区 + 底部输入栏
- * - 嵌入小窗：紧凑头部 + 消息区 + 抽屉历史 + 底部输入栏
+ * Regardless of appType (chat / agent / workflow), all use this UI:
+ * - Full page: left history sidebar + right message area + bottom input bar
+ * - Embedded widget: compact header + message area + drawer history + bottom input bar
  */
 const CustomerServiceShell: React.FC<Props> = ({
   appType,
@@ -94,37 +94,34 @@ const CustomerServiceShell: React.FC<Props> = ({
         isNarrow ? styles['shell--narrow'] : '',
       ].filter(Boolean).join(' ')}
     >
-      {/* ── 头部 ── */}
+      {/* ── Header ── */}
       <header className={[styles.shell__header, isEmbed || isNarrow ? styles['shell__header--compact'] : ''].filter(Boolean).join(' ')}>
-        {/* 应用图标 */}
+        {/* App icon */}
         {appIcon
           ? <img src={appIcon} alt={appName ?? ''} className={styles['shell__app-icon']} />
           : (
-              <div className={styles['shell__app-icon-placeholder']} aria-hidden="true">
-                {appName?.[0] ?? 'A'}
-              </div>
-            )}
+            <div className={styles['shell__app-icon-placeholder']} aria-hidden="true">
+              {appName?.[0] ?? 'A'}
+            </div>
+          )}
 
-        {/* 应用名 */}
-        <span className={styles['shell__app-name']}>{appName ?? '智能客服'}</span>
-
-        {/* 历史入口（drawer 模式下显示） */}
+        {/* History entry (shown in drawer mode) */}
         {useDrawer && (
           <button
             type="button"
             className={styles['shell__header-btn']}
             onClick={() => setHistoryDrawerOpen(true)}
-            title="打开历史记录"
-            aria-label="打开历史记录"
+            title="Open history"
+            aria-label="Open history"
           >
             <ClockIcon className={styles['shell__header-icon']} aria-hidden="true" />
           </button>
         )}
       </header>
 
-      {/* ── 主体区域 ── */}
+      {/* ── Main body ── */}
       <div className={styles.shell__body}>
-        {/* 侧边栏历史（非 drawer 模式常驻） */}
+        {/* Session sidebar (always visible in non-drawer mode) */}
         <SessionSidebar
           sessions={sessions}
           activeSessionId={activeSessionId}
@@ -136,9 +133,9 @@ const CustomerServiceShell: React.FC<Props> = ({
           appName={appName}
         />
 
-        {/* 主内容区 */}
+        {/* Main content area */}
         <main className={styles.shell__main}>
-          {/* 消息流 */}
+          {/* Message stream */}
           <MessageList
             messages={messages}
             appName={appName}
@@ -149,7 +146,7 @@ const CustomerServiceShell: React.FC<Props> = ({
             onFeedback={handleFeedback}
           />
 
-          {/* 输入区 */}
+          {/* Input area */}
           <Composer
             value={inputText}
             onChange={setInputText}

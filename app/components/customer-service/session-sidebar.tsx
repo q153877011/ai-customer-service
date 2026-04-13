@@ -53,13 +53,13 @@ export const SessionSidebar: React.FC<Props> = ({
     <div className="sidebar">
       {/* Header */}
       <div className="sidebar__header">
-        <span className="sidebar__title">{appName ? `${appName} · 历史` : '历史记录'}</span>
+        <span className="sidebar__title">{appName ? `${appName} · History` : 'History'}</span>
         <div className="sidebar__header-actions">
-          <button type="button" className="sidebar__new-btn" onClick={onNew} title="新建会话" aria-label="新建会话">
+          <button type="button" className="sidebar__new-btn" onClick={onNew} title="New session" aria-label="New session">
             <PlusIcon className="sidebar__icon" aria-hidden="true" />
           </button>
           {drawerMode && (
-            <button type="button" className="sidebar__close-btn" onClick={onCloseDrawer} title="关闭" aria-label="关闭">
+            <button type="button" className="sidebar__close-btn" onClick={onCloseDrawer} title="Close" aria-label="Close">
               <XMarkIcon className="sidebar__icon" aria-hidden="true" />
             </button>
           )}
@@ -70,7 +70,7 @@ export const SessionSidebar: React.FC<Props> = ({
       <div className="sidebar__list">
         {sessions.length === 0
           ? (
-              <p className="sidebar__empty">暂无历史记录</p>
+              <p className="sidebar__empty">No history yet</p>
             )
           : sessions.map(s => (
               <SessionItem
@@ -96,7 +96,7 @@ export const SessionSidebar: React.FC<Props> = ({
       <div
         className={`sidebar-drawer${drawerOpen ? ' sidebar-drawer--open' : ''}`}
         role="complementary"
-        aria-label="历史记录"
+        aria-label="History"
       >
         {content}
       </div>

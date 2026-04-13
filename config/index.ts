@@ -1,8 +1,14 @@
 import type { AppInfo } from '@/types/app'
 
-export const APP_ID = `${process.env.NEXT_PUBLIC_APP_KEY}` // kept for legacy API routes
-export const API_KEY = `${process.env.NEXT_PUBLIC_APP_KEY}`
-export const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`
+// APP_KEY / APP_API_URL are not prefixed with NEXT_PUBLIC_ and are therefore
+// only readable in server-side API Routes. Client-side (browser) code cannot
+// access these values — this is an intentional security design.
+export const APP_ID = process.env.APP_KEY ?? '' // kept for legacy API routes
+export const API_KEY = process.env.APP_KEY ?? ''
+export const API_URL = process.env.APP_API_URL ?? ''
+
+if (!API_KEY && typeof window === 'undefined')
+  console.error('[config] APP_KEY is not set — all Dify API calls will fail.')
 
 export const API_PREFIX = '/api'
 
@@ -21,10 +27,16 @@ export const DEFAULT_VALUE_MAX_LEN = 48
  */
 export type AppTypeValue = 'completion' | 'workflow' | 'chat' | 'agent'
 
-/** Legacy boolean — kept for cool-text-generation which hasn't been migrated yet */
+/**
+ * @deprecated Legacy boolean constant — remove after migration is complete.
+ * Use the runtime-detected AppTypeValue instead.
+ */
 export const IS_WORKFLOW = false
 
-/** Legacy boolean — this app is always chat-based after the unification refactor */
+/**
+ * @deprecated Legacy boolean constant — remove after migration is complete.
+ * Use the runtime-detected AppTypeValue instead.
+ */
 export const IS_CHAT_APP = true
 
 /** Fallback app info — actual info is fetched at runtime via /v1/meta */

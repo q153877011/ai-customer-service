@@ -4,13 +4,14 @@ import { useCallback, useEffect, useState } from 'react'
 export type ContainerSize = 'narrow' | 'medium' | 'wide'
 
 /**
- * 用 ResizeObserver 监听目标元素宽度，返回容器尺寸档位。
- * - narrow: < 480px   （适合嵌入小窗）
- * - medium: 480–768px （平板 / 窄侧栏）
- * - wide:   > 768px   （桌面完整页）
+ * Uses a ResizeObserver to watch the target element's width and returns a
+ * container size tier:
+ * - narrow: < 480px   (suitable for embedded widgets)
+ * - medium: 480–768px (tablet / narrow sidebar)
+ * - wide:   > 768px   (full desktop page)
  *
- * 相比 useBreakpoints（基于 window.innerWidth），此 hook 在 iframe
- * 和非全屏容器中不会误判。
+ * Unlike useBreakpoints (which is based on window.innerWidth), this hook
+ * produces correct results inside iframes and non-fullscreen containers.
  */
 export function useContainerBreakpoints(containerRef: React.RefObject<HTMLElement | null>): ContainerSize {
   const [size, setSize] = useState<ContainerSize>('wide')
@@ -25,7 +26,7 @@ export function useContainerBreakpoints(containerRef: React.RefObject<HTMLElemen
     const el = containerRef.current
     if (!el) return
 
-    // 初始化一次
+    // Initialize once
     setSize(computeSize(el.getBoundingClientRect().width))
 
     const observer = new ResizeObserver((entries) => {

@@ -72,10 +72,10 @@ const AgentThoughtBubble: React.FC<{
     <AppAvatar appName={appName} appIcon={appIcon} />
     <div className="msg-bubble msg-bubble--assistant">
       <details className="msg-thought">
-        <summary>查看思考过程</summary>
+        <summary>View thinking process</summary>
         {msg.agentThought.thought && <p>{msg.agentThought.thought}</p>}
         {msg.agentThought.tool && (
-          <p className="msg-thought__tool">工具：{msg.agentThought.tool}</p>
+          <p className="msg-thought__tool">Tool: {msg.agentThought.tool}</p>
         )}
         {/* TODO: surface observation/tool_input fields when needed */}
       </details>
@@ -106,7 +106,7 @@ const AssistantBubble: React.FC<{
               type="button"
               className={`msg-action-btn${ttsPlaying ? ' msg-action-btn--active' : ''}`}
               onClick={onTts}
-              title={ttsPlaying ? '停止朗读' : '朗读'}
+              title={ttsPlaying ? 'Stop reading' : 'Read aloud'}
             >
               <SpeakerWaveIcon className="msg-action-icon" aria-hidden="true" />
             </button>
@@ -115,7 +115,7 @@ const AssistantBubble: React.FC<{
             type="button"
             className={`msg-action-btn${msg.feedback?.rating === 'like' ? ' msg-action-btn--active' : ''}`}
             onClick={() => onFeedback({ rating: msg.feedback?.rating === 'like' ? null : 'like' })}
-            title="有帮助"
+            title="Helpful"
           >
             <HandThumbUpIcon className="msg-action-icon" aria-hidden="true" />
           </button>
@@ -123,7 +123,7 @@ const AssistantBubble: React.FC<{
             type="button"
             className={`msg-action-btn${msg.feedback?.rating === 'dislike' ? ' msg-action-btn--active' : ''}`}
             onClick={() => onFeedback({ rating: msg.feedback?.rating === 'dislike' ? null : 'dislike' })}
-            title="无帮助"
+            title="Not helpful"
           >
             <HandThumbDownIcon className="msg-action-icon" aria-hidden="true" />
           </button>
@@ -152,7 +152,7 @@ export const MessageList: React.FC<Props> = ({
   if (messages.length === 0) {
     return (
       <div className="msg-empty">
-        <p>有什么可以帮您？</p>
+        <p>How can I help you?</p>
       </div>
     )
   }

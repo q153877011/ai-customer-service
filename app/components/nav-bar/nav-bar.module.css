@@ -3,12 +3,32 @@
 .nav {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  height: 48px;
+  justify-content: space-between;
+  height: 52px;
   padding: 0 20px;
   background: #FFFEFA;
   border-bottom: 1px solid #F0EDE8;
   flex-shrink: 0;
+}
+
+/* 左侧 Logo + 品牌名 */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.brandIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.brandName {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1A1A;
+  letter-spacing: -0.2px;
 }
 
 .links {
@@ -45,4 +65,27 @@
 .linkActive:hover {
   color: #C8754A;
   background: #F1E2D8;
+}
+
+/* Legacy 链接：灰色降权显示 */
+.linkLegacy {
+  color: #A89E96;
+  font-size: 13px;
+}
+
+.linkLegacy:hover {
+  color: #5C564E;
+}
+
+/* 旧版标签 */
+.legacyBadge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 5px;
+  background: #F0EDE8;
+  color: #8C7E72;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 4px;
+  vertical-align: middle;
 }

@@ -1,10 +1,6 @@
 import { type NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-import { ChatClient } from 'dify-client'
-import { API_KEY, API_URL } from '@/config'
-import { getInfo, setSession } from '@/app/api/utils/common'
-
-const chatClient = new ChatClient(API_KEY, API_URL || undefined)
+import { client, getInfo, setSession } from '@/app/api/utils/common'
 
 /**
  * 获取对话列表
@@ -19,7 +15,7 @@ export async function GET(request: NextRequest) {
   const limit = searchParams.get('limit') ? Number(searchParams.get('limit')) : 20
 
   try {
-    const { data }: any = await chatClient.getConversations(user, first_id, limit, null)
+    const { data }: any = await client.getConversations(user, first_id, limit, null)
     return NextResponse.json(data, {
       headers: setSession(sessionId),
     })
@@ -27,6 +23,6 @@ export async function GET(request: NextRequest) {
   catch (e: any) {
     const status = e?.response?.status ?? 500
     const body = e?.response?.data ?? { message: e?.message ?? 'Internal Server Error' }
-    return NextResponse.json(body, { status })
+    return NextResponse.json(body, { status, headers: setSession(sessionId) })
   }
 }

@@ -22,7 +22,7 @@ import { fetchAppMeta, fetchAppParams, fetchWorkflowLogs, fetchWorkflowRunDetail
 import type { Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
 import { Resolution, TransferMethod } from '@/types/app'
 import { changeLanguage } from '@/i18n/i18next-config'
-import { API_KEY, APP_ID, APP_INFO as DEFAULT_APP_INFO, DEFAULT_VALUE_MAX_LEN, IS_WORKFLOW } from '@/config'
+import { APP_INFO as DEFAULT_APP_INFO, DEFAULT_VALUE_MAX_LEN, IS_WORKFLOW } from '@/config'
 import { userInputsFormToPromptVariables } from '@/utils/prompt'
 import s from './cool-styles.module.css'
 
@@ -75,7 +75,8 @@ const CoolTextGeneration = () => {
   const isInBatchTab = currTab === 'batch'
 
   // App state
-  const hasSetAppConfig = APP_ID && API_KEY
+  // 通过无敏感信息的 NEXT_PUBLIC_APP_CONFIGURED 检查服务端是否已配置
+  const hasSetAppConfig = process.env.NEXT_PUBLIC_APP_CONFIGURED === 'true'
   const [appUnavailable, setAppUnavailable] = useState<boolean>(false)
   const [isUnknwonReason, setIsUnknwonReason] = useState<boolean>(false)
   const [inputs, setInputs] = useState<Record<string, any>>({})

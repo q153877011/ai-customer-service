@@ -41,7 +41,10 @@ export async function POST(request: NextRequest, { params }: {
     const { data } = await client.messageFeedback(messageId, rating, user)
     return NextResponse.json(data)
   }
-  catch (e) {
-    return NextResponse.json(e)
+  catch (e: any) {
+    return NextResponse.json(
+      { message: e?.message ?? 'Internal Server Error' },
+      { status: e?.response?.status ?? 500 },
+    )
   }
 }

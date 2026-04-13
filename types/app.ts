@@ -255,7 +255,7 @@ export type AttachedFile = {
 // Unified Customer Service Session types
 // ────────────────────────────────────────────────
 
-/** 一条统一消息（消息流的基本单元） */
+/** A single unified message (the basic unit of the message stream) */
 export type UnifiedMessage =
   | {
       kind: 'user'
@@ -269,7 +269,7 @@ export type UnifiedMessage =
       id: string
       content: string
       isStreaming?: boolean
-      /** 该消息对应的 Dify message_id（chat 模式下由 message_end 事件写入） */
+      /** Dify message_id for this message (written by the message_end event in chat mode) */
       difyMessageId?: string
       feedback?: Feedbacktype
       createdAt: number
@@ -277,7 +277,7 @@ export type UnifiedMessage =
   | {
       kind: 'agent_thought'
       id: string
-      /** 每个 agent_thought 事件单独产生一条消息，而不是追加到上一条。 */
+      /** Each agent_thought event produces its own message rather than being appended to the previous one. */
       agentThought: AgentThought
       createdAt: number
     }
@@ -288,46 +288,47 @@ export type UnifiedMessage =
       createdAt: number
     }
 
-/** 统一消息类型标识 */
+/** Unified message kind discriminant */
 export type UnifiedMessageKind = UnifiedMessage['kind']
 
-/** workflow 事件卡的数据模型 */
+/** Data model for the workflow event card */
 export type WorkflowEventMessage = {
   /** Dify workflow run id */
   runId: string
   status: WorkflowRunningStatus
-  /** 已完成的节点追踪列表（运行中持续追加） */
+  /** List of completed node traces (appended continuously while running) */
   nodes: NodeTracing[]
-  /** workflow 最终输出文本（succeeded 后写入） */
+  /** Final workflow output text (written after succeeded) */
   outputText?: string
-  /** 错误信息（failed 后写入） */
+  /** Error message (written after failed) */
   error?: string
-  /** 总耗时（ms，succeeded / failed 后写入） */
+  /** Total elapsed time in ms (written after succeeded / failed) */
   elapsedMs?: number
-  /** 是否展开节点详情（UI 临时状态，序列化时可忽略） */
+  /** Whether the node details section is expanded (transient UI state — can be omitted during serialization) */
   expanded?: boolean
 }
 
 /**
- * 统一 session 标识。消息列表由外部 messageMap: Map<string, UnifiedMessage[]> 持有，
- * 不内嵌在此类型中，以避免大列表深拷贝。
+ * Unified session identifier. The message list is held externally in a
+ * messageMap: Map<string, UnifiedMessage[]> rather than embedded here,
+ * to avoid deep-copying large arrays.
  * - chat / agent → id = Dify conversation_id
- * - workflow      → id = Dify workflow run_id（本地临时 uuid，提交前为空）
+ * - workflow      → id = Dify workflow run_id (local temporary uuid before submission)
  */
 export type UnifiedSession = {
-  /** 对应 Dify conversation_id 或 workflow run_id */
+  /** Corresponding Dify conversation_id or workflow run_id */
   id: string
-  /** 展示名，chat 用 Dify 对话名，workflow 用时间戳生成 */
+  /** Display name — chat uses the Dify conversation name, workflow uses a timestamp */
   name: string
-  /** 会话来源类型 */
+  /** Source app type of the session */
   appType: Exclude<AppTypeValue, 'completion'>
   createdAt: number
 }
 
-/** embed 小窗 UI 状态 */
+/** Embed widget UI state */
 export type EmbedUIState = {
-  /** true = 以嵌入/小窗模式渲染（紧凑头部、抽屉历史、压缩按钮） */
+  /** true = render in embedded / widget mode (compact header, drawer history, condensed buttons) */
   isEmbed: boolean
-  /** 历史抽屉是否打开（embed 模式下） */
+  /** Whether the history drawer is open (in embed mode) */
   historyDrawerOpen: boolean
 }
