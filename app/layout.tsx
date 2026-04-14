@@ -13,7 +13,7 @@ const LocaleLayout = async ({
   return (
     <html lang={locale ?? 'en'} className="h-full">
       <body className="h-full">
-        <I18nProvider>
+        <I18nProvider locale={locale}>
           {children}
         </I18nProvider>
       </body>

@@ -104,7 +104,7 @@ const translation = {
       modeLabel: 'Chat modes',
       modeValue: 'Chat / Agent / Workflow',
       deployLabel: 'Deployment',
-      deployValue: 'Docker / Vercel / K8s',
+      deployValue: 'EdgeOne Pages',
       licenseLabel: 'License',
       licenseValue: 'MIT License',
       minConfigLabel: 'Min. requirements',
@@ -140,8 +140,6 @@ const translation = {
     demo: 'Demo',
     support: 'Support',
     embed: 'Embed',
-    legacy: 'Legacy',
-    legacyBadge: 'Old',
   },
   widget: {
     openLabel: 'Open AI Support',

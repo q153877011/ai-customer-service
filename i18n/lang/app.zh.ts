@@ -101,7 +101,7 @@ const translation = {
       modeLabel: '对话模式',
       modeValue: 'Chat / Agent / Workflow',
       deployLabel: '部署方式',
-      deployValue: 'Docker / Vercel / K8s',
+      deployValue: 'EdgeOne Pages',
       licenseLabel: '开源协议',
       licenseValue: 'MIT License',
       minConfigLabel: '最低配置',
@@ -137,8 +137,6 @@ const translation = {
     demo: '演示首页',
     support: '客服中心',
     embed: 'Embed 入口',
-    legacy: 'Legacy',
-    legacyBadge: '旧版',
   },
   widget: {
     openLabel: '打开智能客服',

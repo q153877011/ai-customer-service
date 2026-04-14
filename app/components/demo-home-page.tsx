@@ -21,7 +21,7 @@ const DemoHomePage: React.FC = () => {
   return (
     <>
       {/* Product demo landing page (main content) */}
-      <div style={{ minHeight: '100%', overflowY: 'auto' }}>
+      <div style={{ height: '100%', overflowY: 'auto' }}>
         <ProductDemoPage />
       </div>
 

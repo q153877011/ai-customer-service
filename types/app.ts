@@ -151,26 +151,9 @@ export enum WorkflowRunningStatus {
   Stopped = 'stopped',
 }
 
-export type WorkflowProcess = {
-  status: WorkflowRunningStatus
-  tracing: NodeTracing[]
-  expand?: boolean // for UI
-}
-
-export enum CodeLanguage {
-  python3 = 'python3',
-  javascript = 'javascript',
-  json = 'json',
-}
-
 // ────────────────────────────────────────────────
 // Chat / Agent types
 // ────────────────────────────────────────────────
-
-export enum MessageRole {
-  User = 'user',
-  Assistant = 'assistant',
-}
 
 export type AgentThought = {
   id: string
@@ -190,30 +173,6 @@ export type MessageAttachment = {
   mimeType: string
   /** Object URL for image thumbnails — revoked on component unmount. */
   previewUrl?: string
-}
-
-export type ChatMessage = {
-  id: string
-  conversation_id: string
-  role: MessageRole
-  /** Streamed or final content */
-  content: string
-  /** True while the assistant reply is still streaming */
-  isStreaming?: boolean
-  feedback?: Feedbacktype
-  agent_thoughts?: AgentThought[]
-  /** Files attached to this user message (images / documents). */
-  attachments?: MessageAttachment[]
-  created_at: number
-}
-
-export type Conversation = {
-  id: string
-  name: string
-  inputs: Record<string, any>
-  introduction: string
-  created_at: number
-  updated_at: number
 }
 
 // ────────────────────────────────────────────────
