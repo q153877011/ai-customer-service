@@ -23,7 +23,7 @@ interface DraggableWidgetProps {
 /** Widget states */
 type WidgetState = 'collapsed' | 'open' | 'closing'
 
-/** Default bottom-right offset (relative to viewport) */
+/** Default margin from viewport edges (px) */
 const DEFAULT_RIGHT = 24
 const DEFAULT_BOTTOM = 24
 
@@ -31,14 +31,17 @@ const DEFAULT_BOTTOM = 24
 const PANEL_W = 400
 const PANEL_H = 560
 
+/** Button dimensions (collapsed state) */
+const BTN_SIZE = 56
+
 /**
  * DraggableWidget
  *
  * Draggable customer service widget container.
  * Content is embedded via <iframe> from the /embed page, fully decoupled from business logic:
  *  - Anyone using this template only needs to change embedUrl to their own bot address.
- *  - Drag logic is implemented with native events; boundary detection prevents the panel
- *    from being dragged outside the viewport.
+ *  - Drag logic uses left/top coordinates so movement always matches the mouse direction
+ *    and boundary clamping is a straightforward Math.max/min.
  */
 const DraggableWidget: React.FC<DraggableWidgetProps> = ({
   embedUrl = '/embed',
@@ -47,14 +50,24 @@ const DraggableWidget: React.FC<DraggableWidgetProps> = ({
   const { t } = useTranslation()
   const panelTitle = title ?? t('app.widget.defaultTitle')
   const [state, setState] = useState<WidgetState>('open')
-  // Panel offset from the fixed default position (px)
-  const [offset, setOffset] = useState({ x: 0, y: 0 })
-  // Whether the user has dragged the panel (determines whether to use transform positioning)
-  const [isDragged, setIsDragged] = useState(false)
+
+  // Absolute left/top position of the widget root (null = not yet initialised,
+  // falls back to CSS right/bottom defaults so SSR doesn't mismatch).
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
 
   const dragging = useRef(false)
-  const dragStart = useRef({ mouseX: 0, mouseY: 0, offsetX: 0, offsetY: 0 })
+  const dragStart = useRef({ mouseX: 0, mouseY: 0, posX: 0, posY: 0 })
   const rootRef = useRef<HTMLDivElement>(null)
+
+  // ── Initialise position after mount (client-only) ──
+  useEffect(() => {
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    setPos({
+      x: vw - DEFAULT_RIGHT - PANEL_W,
+      y: vh - DEFAULT_BOTTOM - PANEL_H,
+    })
+  }, [])
 
   // ── Open ──
   const handleOpen = useCallback(() => {
@@ -67,7 +80,7 @@ const DraggableWidget: React.FC<DraggableWidgetProps> = ({
     setTimeout(() => setState('collapsed'), 200)
   }, [])
 
-  // ── Drag: mousedown on header triggers drag ──
+  // ── Drag: mousedown / touchstart on header ──
   const handleDragStart = useCallback(
     (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
       if (state !== 'open') return
@@ -79,11 +92,11 @@ const DraggableWidget: React.FC<DraggableWidgetProps> = ({
       dragStart.current = {
         mouseX: clientX,
         mouseY: clientY,
-        offsetX: offset.x,
-        offsetY: offset.y,
+        posX: pos?.x ?? 0,
+        posY: pos?.y ?? 0,
       }
     },
-    [state, offset],
+    [state, pos],
   )
 
   // ── Drag: global mousemove / touchmove ──
@@ -97,24 +110,16 @@ const DraggableWidget: React.FC<DraggableWidgetProps> = ({
       const dx = clientX - dragStart.current.mouseX
       const dy = clientY - dragStart.current.mouseY
 
-      let newX = dragStart.current.offsetX + dx
-      let newY = dragStart.current.offsetY + dy
+      const rawX = dragStart.current.posX + dx
+      const rawY = dragStart.current.posY + dy
 
-      // Boundary detection: keep at least 60px of the panel visible
+      // Clamp so the panel stays fully within the viewport
       const vw = window.innerWidth
       const vh = window.innerHeight
-      const keepVisible = 60
+      const clampedX = Math.max(0, Math.min(vw - PANEL_W, rawX))
+      const clampedY = Math.max(0, Math.min(vh - PANEL_H, rawY))
 
-      const panelRight = DEFAULT_RIGHT - newX
-      const panelBottom = DEFAULT_BOTTOM - newY
-
-      if (panelRight < keepVisible - PANEL_W) newX = PANEL_W - keepVisible - DEFAULT_RIGHT
-      if (panelRight > vw - keepVisible) newX = -(vw - keepVisible - DEFAULT_RIGHT)
-      if (panelBottom < keepVisible - PANEL_H) newY = PANEL_H - keepVisible - DEFAULT_BOTTOM
-      if (panelBottom > vh - keepVisible) newY = -(vh - keepVisible - DEFAULT_BOTTOM)
-
-      setOffset({ x: newX, y: newY })
-      setIsDragged(true)
+      setPos({ x: clampedX, y: clampedY })
     }
 
     const onUp = () => { dragging.current = false }
@@ -132,12 +137,18 @@ const DraggableWidget: React.FC<DraggableWidgetProps> = ({
     }
   }, [])
 
-  // ── Compute inline style for the root container ──
-  const rootStyle: React.CSSProperties = isDragged
+  // ── Compute inline style ──
+  // Once pos is known we switch from CSS right/bottom to absolute left/top so
+  // the coordinate system is straightforward and drag direction matches the mouse.
+  const isOpen = state === 'open' || state === 'closing'
+  const w = isOpen ? PANEL_W : BTN_SIZE
+  const h = isOpen ? PANEL_H : BTN_SIZE
+  const rootStyle: React.CSSProperties = pos !== null
     ? {
-      right: DEFAULT_RIGHT,
-      bottom: DEFAULT_BOTTOM,
-      transform: `translate(${-offset.x}px, ${-offset.y}px)`,
+      left: Math.max(0, Math.min(window.innerWidth - w, pos.x)),
+      top: Math.max(0, Math.min(window.innerHeight - h, pos.y)),
+      right: 'auto',
+      bottom: 'auto',
     }
     : {}
 
