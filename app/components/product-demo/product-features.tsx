@@ -109,15 +109,7 @@ const ProductFeatures: React.FC = () => {
             <h2 className={styles.ctaTitle}>{t('app.productDemo.cta.title')}</h2>
             <p className={styles.ctaDesc}>{t('app.productDemo.cta.desc')}</p>
             <div className={styles.ctaActions}>
-              <a
-                href="https://github.com/langgenius/dify"
-                target="_blank"
-                rel="noreferrer"
-                className={styles.btnPrimary}
-              >
-                {t('app.productDemo.cta.btnGithub')}
-              </a>
-              <a href="/embed" className={styles.btnSecondary}>
+              <a href="/embed" className={styles.btnPrimary}>
                 {t('app.productDemo.cta.btnEmbed')}
               </a>
             </div>

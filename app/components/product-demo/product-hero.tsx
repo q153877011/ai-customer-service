@@ -20,27 +20,6 @@ const ProductHero: React.FC = () => {
           </h1>
           <p className={styles.heroDesc}>{t('app.productDemo.hero.desc')}</p>
 
-          <div className={styles.heroPricing}>
-            <span className={styles.priceLabel}>{t('app.productDemo.hero.priceLabel')}</span>
-            <span className={styles.priceValue}>{t('app.productDemo.hero.priceValue')}</span>
-            <span className={styles.priceSub}>{t('app.productDemo.hero.priceSub')}</span>
-          </div>
-
-          <div className={styles.heroActions}>
-            <button className={styles.btnPrimary}>
-              {t('app.productDemo.hero.btnDeploy')}
-              <span className={styles.btnArrow}>→</span>
-            </button>
-            <a
-              href="https://github.com/langgenius/dify"
-              target="_blank"
-              rel="noreferrer"
-              className={styles.btnSecondary}
-            >
-              {t('app.productDemo.hero.btnSource')}
-            </a>
-          </div>
-
           <div className={styles.heroMeta}>
             <div className={styles.metaItem}>
               <span className={styles.metaDot} style={{ background: '#22c55e' }} />

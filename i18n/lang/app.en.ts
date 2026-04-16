@@ -54,9 +54,9 @@ const translation = {
   productDemo: {
     hero: {
       badge: '✨ Brand-new AI Customer Service Solution',
-      titleStart: 'Give every visitor',
+      titleStart: 'Give every visitor ',
       titleAccent: 'instant & personal',
-      titleEnd: 'support',
+      titleEnd: ' support',
       desc: 'Powered by Dify\'s AI engine, embed a smart support widget into your site seamlessly. Supports Chat, Agent, and Workflow modes — 24 × 7 for your users.',
       priceLabel: 'Get started',
       priceValue: 'Free',
